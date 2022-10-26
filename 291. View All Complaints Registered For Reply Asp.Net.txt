@@ -1,0 +1,14 @@
+CommandArgument Configuration For Reply Button
+--------------------------------------------------
+
+CommandArgument='<%# Eval("complaintid")%>' 
+
+--------------------------------------------------
+
+Reply Button Click Event Coding
+--------------------------------------------
+        Button btn = (Button)sender;
+        string args = btn.CommandArgument;
+        Response.Redirect("doreply.aspx?complaintid=" + args);
+
+-------------------------------------------

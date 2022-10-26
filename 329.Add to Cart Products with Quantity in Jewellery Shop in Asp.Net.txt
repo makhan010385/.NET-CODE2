@@ -1,0 +1,139 @@
+Quantity TextBox Alignment Centre Coding
+------------------------------------------
+
+style="text-align: center"
+
+------------------------------------------
+
+Important Coding for Buy Now Button
+-------------------------------------
+
+CommandArgument <%# Eval("designid")%>
+
+CommandName  addtocart
+
+--------------------------------------
+
+PageLoad Coding
+---------------
+
+Session["addproduct"] = "false";
+
+---------------
+
+DataList Item Command Event Coding
+-----------------------------------
+
+         TextBox txtbox = (TextBox)(e.Item.FindControl("TextBox1"));
+        Session["addproduct"] = "true";
+        Response.Redirect("AddtoCart.aspx?id=" + e.CommandArgument.ToString()+"&Quantity="+txtbox.Text);
+
+-------------------------------------
+
+AddtoCart.aspx Page Coding
+----------------------------
+
+Important Namespaces
+----------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+----------------------
+
+Page Load Coding
+-----------------
+
+ if (Session["addproduct"].ToString() == "true")
+        {
+            Session["addproduct"] = "false";
+            DataTable dt = new DataTable();
+            DataRow dr;
+            dt.Columns.Add("sno");
+            dt.Columns.Add("designid");
+            dt.Columns.Add("productname");
+            dt.Columns.Add("productimg");
+            dt.Columns.Add("description");
+            dt.Columns.Add("quantity");
+            dt.Columns.Add("price");
+            dt.Columns.Add("total");
+
+
+            if (Request.QueryString["id"] != null)
+            {
+                if (Session["Buyitems"] == null)
+                {
+
+                    dr = dt.NewRow();
+                    String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=jewelleryshop;Integrated Security=True";
+                    SqlConnection scon = new SqlConnection(mycon);
+                    String myquery = "select * from productdetails where designid=" + Request.QueryString["id"];
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = myquery;
+                    cmd.Connection = scon;
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    dr["sno"] = 1;
+                    dr["designid"] = ds.Tables[0].Rows[0]["designid"].ToString();
+                    dr["productname"] = ds.Tables[0].Rows[0]["productname"].ToString();
+                    dr["productimg"] = ds.Tables[0].Rows[0]["productimage"].ToString();
+                    dr["description"] = ds.Tables[0].Rows[0]["shortdescription"].ToString();
+                    dr["quantity"] = Request.QueryString["quantity"];
+                    dr["price"] = ds.Tables[0].Rows[0]["price"].ToString();
+                    Int64 price = Convert.ToInt64(ds.Tables[0].Rows[0]["price"].ToString());
+                    Int64 quantity = Convert.ToInt64(Request.QueryString["quantity"].ToString());
+                    Int64 totalprice = price * quantity;
+                    dr["total"] = totalprice;
+                    dt.Rows.Add(dr);
+                    GridView1.DataSource = dt;
+                    GridView1.DataBind();
+                    Session["buyitems"] = dt;
+                }
+                else
+                {
+
+                    dt = (DataTable)Session["buyitems"];
+                    int sr;
+                    sr = dt.Rows.Count;
+
+                    dr = dt.NewRow();
+                    String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=jewelleryshop;Integrated Security=True";
+                    SqlConnection scon = new SqlConnection(mycon);
+                    String myquery = "select * from productdetails where designid=" + Request.QueryString["id"];
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = myquery;
+                    cmd.Connection = scon;
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    dr["sno"] = sr + 1;
+                    dr["designid"] = ds.Tables[0].Rows[0]["designid"].ToString();
+                    dr["productname"] = ds.Tables[0].Rows[0]["productname"].ToString();
+                    dr["productimg"] = ds.Tables[0].Rows[0]["productimage"].ToString();
+                    dr["description"] = ds.Tables[0].Rows[0]["shortdescription"].ToString();
+                    dr["quantity"] = Request.QueryString["quantity"];
+                    dr["price"] = ds.Tables[0].Rows[0]["price"].ToString();
+                    Int64 price = Convert.ToInt64(ds.Tables[0].Rows[0]["price"].ToString());
+                    Int64 quantity = Convert.ToInt64(Request.QueryString["quantity"].ToString());
+                    Int64 totalprice = price * quantity;
+                    dr["total"] = totalprice;
+                    dt.Rows.Add(dr);
+                    GridView1.DataSource = dt;
+                    GridView1.DataBind();
+                    Session["buyitems"] = dt;
+
+                }
+            }
+
+
+        }
+        else
+        {
+            DataTable dt;
+            dt = (DataTable)Session["buyitems"];
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
+        }

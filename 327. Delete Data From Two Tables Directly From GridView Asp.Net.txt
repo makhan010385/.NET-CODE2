@@ -1,0 +1,58 @@
+Important Namespaces used
+-------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+---------------
+
+GridView RowCommand Event Coding
+---------------------------------
+
+  if (e.CommandName == "Delete Row")
+        {
+            int crow;
+            crow = Convert.ToInt32(e.CommandArgument.ToString());
+            string rollno = GridView1.Rows[crow].Cells[0].Text;
+            deleterowdata(rollno);
+        }
+
+---------------------------------
+
+user defined method coding
+---------------------------------
+
+ private void deleterowdata(String rollno)
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=CollegeData; Integrated Security=True";
+        String deletedata = "delete from studentdata where rollno=" + Convert.ToInt16(rollno);
+        SqlConnection con = new SqlConnection(mycon);
+        con.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = deletedata;
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+        con.Close();
+
+        String mycon1 = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=CollegeData; Integrated Security=True";
+        String deletedata1 = "delete from classdetail where rollno=" + Convert.ToInt16(rollno);
+        SqlConnection con1 = new SqlConnection(mycon1);
+        con1.Open();
+        SqlCommand cmd1 = new SqlCommand();
+        cmd1.CommandText = deletedata1;
+        cmd1.Connection = con1;
+        cmd1.ExecuteNonQuery();
+        con1.Close();
+        Label3.Text = "Record with Rollno " + rollno + " has been deleted successfully";
+        GridView1.DataBind();
+
+    }
+
+--------------------------------
+
+SQL Query in SQLDataSource Control
+--------------------------------
+
+select studentdata.rollno,studentdata.sname,studentdata.fathername,studentdata.mothername,classdetail.class,classdetail.section from studentdata,classdetail where studentdata.rollno=classdetail.rollno
+
+--------------------------------

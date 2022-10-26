@@ -1,0 +1,115 @@
+Important Namespaces
+-----------------------
+
+using System.IO;
+using System.Drawing;
+
+-----------------------
+
+Page Load Coding
+------------------
+
+ Image2.Visible = false;
+
+-----------------
+
+Upload Button Click Event
+--------------------------
+
+ string uploadFileName = "";
+        string uploadFilePath = "";
+        if (FileUpload1.HasFile)
+        {
+            string ext = Path.GetExtension(FileUpload1.FileName).ToLower();
+            if (ext == ".jpg" || ext == ".jpeg" || ext == ".gif" || ext == ".png")
+            {
+                uploadFileName = Guid.NewGuid().ToString() + ext;
+                uploadFilePath = Path.Combine(Server.MapPath("~/Images"), uploadFileName);
+                try
+                {
+                    FileUpload1.SaveAs(uploadFilePath);
+                    Image1.ImageUrl = "~/Images/" + uploadFileName;
+                    Panel1.Visible = true;
+                }
+                catch (Exception ex)
+                {
+                    Label3.Text = "Error! Please try again.";
+                }
+            }
+            else
+            {
+                Label3.Text = "Selected file type not allowed!";
+            }
+        }
+        else
+        {
+            Label3.Text = "Please select file first!";
+        }
+
+------------------------
+
+Crop and Save Image Button Click Event
+-------------------------------------
+
+
+string fileName = Path.GetFileName(Image1.ImageUrl);
+        string filePath = Path.Combine(Server.MapPath("~/Images"), fileName);
+        string cropFileName = "";
+        string cropFilePath = "";
+        if (File.Exists(filePath))
+        {
+            System.Drawing.Image orgImg = System.Drawing.Image.FromFile(filePath);
+            Rectangle CropArea = new Rectangle(Convert.ToInt32(X.Value),Convert.ToInt32(Y.Value),Convert.ToInt32(W.Value),Convert.ToInt32(H.Value));
+            try
+            {
+                Bitmap bitMap = new Bitmap(CropArea.Width, CropArea.Height);
+                using (Graphics g = Graphics.FromImage(bitMap))
+                {
+                    g.DrawImage(orgImg, new Rectangle(0, 0, bitMap.Width, bitMap.Height), CropArea, GraphicsUnit.Pixel);
+                }
+                cropFileName = "crop_" + fileName;
+                cropFilePath = Path.Combine(Server.MapPath("~/Images"), cropFileName);
+                bitMap.Save(cropFilePath);
+                // Response.Redirect("~/Images/" + cropFileName, false);
+                Image2.ImageUrl = "~/Images/" + cropFileName;
+                Image2.Visible = true;
+                Label4.Text = "File Has Been Croped and Saved to Server ";
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+===========================
+
+Hidden Field
+
+				<asp:HiddenField ID="X" runat="server" />
+                                <asp:HiddenField ID="Y" runat="server" />
+                                <asp:HiddenField ID="W" runat="server" />
+                                <asp:HiddenField ID="H" runat="server" />
+
+-------------------
+
+Coding for Jquery
+
+<link href="Scripts/jquery.Jcrop.css" rel="stylesheet" />
+             <script src="http://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.4/js/Jcrop.min.js"></script>
+    <link rel="Stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/2.0.4/css/Jcrop.css" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#<%=Image1.ClientID%>').Jcrop({
+                        onSelect: SelectCropArea
+                    });
+                });
+                function SelectCropArea(c) {
+                    $('#<%=X.ClientID%>').val(parseInt(c.x));
+                    $('#<%=Y.ClientID%>').val(parseInt(c.y));
+                    $('#<%=W.ClientID%>').val(parseInt(c.w));
+                    $('#<%=H.ClientID%>').val(parseInt(c.h));
+                }
+            </script>
+

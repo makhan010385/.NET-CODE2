@@ -1,0 +1,5 @@
+Custom SQL Query For Fetch Data From SQL Server
+-----------------------------------------------
+
+select studentdata.rollno,studentdata.sname,studentdata.fathername, studentdata.mothername, classdetail.class, classdetail.section  from studentData,ClassDetail where studentdata.rollno=classdetail.rollno
+

@@ -1,0 +1,20 @@
+Search Button Click Event
+--------------------------
+
+if(TextBox1.Text!="")
+        {
+            DataList1.DataSourceID = null;
+            DataList1.DataSource= SqlDataSource2;
+            DataList1.DataBind();
+        }
+
+--------------------------
+
+LinkButton Click Event
+------------------------
+
+ 	DataList1.DataSourceID = null;
+        DataList1.DataSource = SqlDataSource1;
+        DataList1.DataBind();
+
+------------------------

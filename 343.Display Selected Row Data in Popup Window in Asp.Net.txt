@@ -1,0 +1,55 @@
+ModalPopupExtender Coding
+-----------------------------
+TargetControlID="LinkButton1" 
+
+PopupControlID="Panel1" 
+
+CancelControlID="Button1" 
+
+BackgroundCssClass="modalBackground"
+
+-----------------------------
+
+CSS Coding
+-----------------------------
+
+.modalBackground
+    {
+        background-color: Black;
+        filter: alpha(opacity=40);
+        opacity: 0.4;
+    }
+    .modalPopup
+    {
+        background-color: #FFFFFF;
+        width: 300px;
+        border: 3px solid #0DA9D0;
+    }
+
+--------------------------------
+
+LinkButton Coding
+--------------------------------
+<asp:LinkButton ID="LinkButton1" runat="server" Text=""></asp:LinkButton>
+
+--------------------------------
+
+Panel Coding
+-------------
+
+CssClass="modalPopup"
+
+Style="display: none" 
+
+------------
+
+GridView Selected Index Changed Coding
+-----------------------------------------
+
+        Label3.Text = GridView1.SelectedRow.Cells[0].Text;
+        Label4.Text = GridView1.SelectedRow.Cells[1].Text;
+        Label5.Text = GridView1.SelectedRow.Cells[2].Text;
+        Label6.Text = GridView1.SelectedRow.Cells[3].Text;
+        ModalPopupExtender1.Show();
+
+----------------------------------------

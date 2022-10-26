@@ -1,0 +1,37 @@
+Important Namespaces
+----------------------
+
+using System.Data.SqlClient;
+using System.IO;
+using System.Data;
+
+----------------------
+
+Save Button Click Event Coding
+------------------------------
+
+string filename = Path.GetFileName(FileUpload1.PostedFile.FileName);
+        Stream fs = FileUpload1.PostedFile.InputStream;
+        BinaryReader br = new BinaryReader(fs);
+        byte[] imagecode = br.ReadBytes((Int32)fs.Length);
+        string query = "Insert Into SoftwareDetails VALUES ('" + TextBox1.Text + "','"+TextBox2.Text+"',@pic)";
+        SqlCommand cmd = new SqlCommand(query);
+        cmd.Parameters.AddWithValue("@pic", imagecode);
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=SoftwareGallery; Integrated Security=true";
+        SqlConnection con = new SqlConnection(mycon);
+        con.Open();
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+        Label3.Text = "Software Has Been Saved Successfully with Software ID " + TextBox1.Text;
+        con.Close();
+        TextBox1.Text = "";
+        TextBox2.Text = "";
+
+--------------------------------
+
+Webconfig File Configuration
+--------------------------------
+
+  <httpRuntime targetFramework="4.6" executionTimeout="250" maxRequestLength="5000000" />
+
+----------------------------------

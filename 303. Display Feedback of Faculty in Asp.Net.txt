@@ -1,0 +1,99 @@
+BootStrap Coding
+-------------------
+
+
+<meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+--------------------
+
+
+Proerpties of ImageButton
+------------------------
+
+CommandArgument='<%# Eval("teacherid")%>'
+
+class="img-circle"
+
+-----------------------
+
+DataList Itemcommand event Coding
+--------------------------------
+
+ Response.Redirect("ShowRating.aspx?id=" + e.CommandArgument.ToString() );
+
+----------------------------------
+
+
+ShowRating.aspx Coding
+--------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-----------------
+
+Variable
+----------
+
+static String teacherid;
+    static int totalrating;
+    static int totalrows;
+    static float overallrating;
+
+-----------
+PageLoad Coding
+
+teacherid = Request.QueryString["id"].ToString();
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=TeacherFeedback; Integrated Security=True";
+        String myquery = "Select sum(rating) from teacherrating where teacherid=" + Convert.ToInt16(teacherid);
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            
+            totalrating =Convert.ToInt16(ds.Tables[0].Rows[0][0].ToString());
+           
+            
+        }
+        con.Close() ;
+        countrows();
+        overallrating =( totalrating / totalrows);
+        Label5.Text = overallrating.ToString();
+
+---------------
+
+
+User Defined Method
+-----------------
+
+private void countrows()
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=TeacherFeedback; Integrated Security=True";
+        String myquery = "Select * from teacherrating where teacherid=" + Convert.ToInt16(teacherid);
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        totalrows = ds.Tables[0].Rows.Count;
+        Label3.Text = teacherid.ToString();
+        Label4.Text = ds.Tables[0].Rows[0]["teachername"].ToString();
+        con.Close();
+    }
+
+
+------------------

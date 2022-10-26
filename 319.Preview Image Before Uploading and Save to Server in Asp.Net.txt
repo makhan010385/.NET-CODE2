@@ -1,0 +1,45 @@
+Important Namespaces Used
+--------------------------
+
+using System.IO;
+
+--------------------------
+
+JQuery Coding
+--------------------------
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+          function ImagePreview(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#<%=Image1.ClientID%>').prop('src', e.target.result)
+                        .width(200)
+                        .height(200);
+                };
+                reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+    </script>
+
+----------------------------
+
+Configuration in FileUpload Control
+----------------------------------
+
+onchange="ImagePreview(this);"
+
+----------------------------------
+
+Upload and Save Button Click Event Coding
+----------------------------------
+
+	string path = Path.GetFileName(FileUpload1.FileName);
+        path = path.Replace(" ", "");
+        String filename1 = path;
+        FileUpload1.SaveAs(Server.MapPath("~/Images/") + path);
+        Label3.Text = "Image Uploaded and Saved in Server Successfully";
+
+----------------------------------

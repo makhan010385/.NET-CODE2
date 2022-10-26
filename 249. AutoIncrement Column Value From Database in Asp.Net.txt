@@ -1,0 +1,81 @@
+Important Namespaces Used
+----------------------------
+using System.Data;
+using System.Data.SqlClient;
+
+-----------------------------
+
+
+Page Load Event Coding
+-----------------------------
+
+getrollno();
+
+-----------------------------
+
+User Defined Method in Coding
+--------------------------------
+
+public void getrollno()
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=collegedata;Integrated Security=True";
+        SqlConnection scon = new SqlConnection(mycon);
+        String myquery = "select rollno from studentdata";
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = scon;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        scon.Close();
+        if (ds.Tables[0].Rows.Count < 1)
+        {
+            Label3.Text = "1001";
+
+        }
+        else
+        {
+
+
+
+            String mycon1 = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=collegedata;Integrated Security=True";
+            SqlConnection scon1 = new SqlConnection(mycon1);
+            String myquery1 = "select max(rollno) from studentdata";
+            SqlCommand cmd1 = new SqlCommand();
+            cmd1.CommandText = myquery1;
+            cmd1.Connection = scon1;
+            SqlDataAdapter da1 = new SqlDataAdapter();
+            da1.SelectCommand = cmd1;
+            DataSet ds1 = new DataSet();
+            da1.Fill(ds1);
+            Label3.Text = ds1.Tables[0].Rows[0][0].ToString();
+            int a;
+            a = Convert.ToInt16(Label3.Text);
+            a = a + 1;
+            Label3.Text = a.ToString();
+            scon1.Close();
+        }
+
+    }
+
+-------------------------
+
+Save Button Click Event Coding
+--------------------------------
+
+ String updatepass = "insert into studentdata(rollno,sname,fathername,mothername) values(" + Label3.Text + ",'" + TextBox1.Text + "','" + TextBox2.Text + "','" + TextBox3.Text +  "')";
+        String mycon1 = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=collegedata;Integrated Security=True";
+        SqlConnection s = new SqlConnection(mycon1);
+        s.Open();
+        SqlCommand cmd1 = new SqlCommand();
+        cmd1.CommandText = updatepass;
+        cmd1.Connection = s;
+        cmd1.ExecuteNonQuery();
+        Label4.Text = "Data Has Been Saved Successfully";
+        getrollno();
+        TextBox1.Text = "";
+        TextBox2.Text = "";
+        TextBox3.Text = "";
+
+---------------------------------

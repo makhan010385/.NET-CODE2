@@ -1,0 +1,44 @@
+Default.aspx Button Click Event Coding
+-------------------------------------
+
+Response.Redirect("GetData.aspx?rollno=" + TextBox1.Text);
+
+--------------------------------------
+
+Page Load Event Coding GetData.aspx
+----------------------------------
+
+  if(Request.QueryString["rollno"]!=null)
+        {
+            String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=CollegeData; Integrated Security=True";
+            String myquery = "Select * from studentdata where rollno=" + Request.QueryString["rollno"].ToString();
+            SqlConnection con = new SqlConnection(mycon);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = myquery;
+            cmd.Connection = con;
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                Label7.Text = "Particular Roll Number Found Successfully";
+               Label3.Text = ds.Tables[0].Rows[0]["rollno"].ToString();
+                Label4.Text = ds.Tables[0].Rows[0]["sname"].ToString();
+                Label5.Text = ds.Tables[0].Rows[0]["fathername"].ToString();
+                Label6.Text = ds.Tables[0].Rows[0]["mothername"].ToString();
+            }
+            else
+            {
+                Label7.Text = "Particular Roll Number Not Found";
+
+            }
+            con.Close();
+        }
+        else
+        {
+            Label7.Text = "No Roll Number Found in Query String";
+        }
+
+--------------------------------------------
+

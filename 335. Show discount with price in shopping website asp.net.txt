@@ -1,0 +1,188 @@
+Important Coding for Buy Now Button
+-------------------------------------
+
+CommandArgument <%# Eval("designid")%>
+
+CommandName  addtocart
+
+--------------------------------------
+
+PageLoad Coding
+---------------
+
+Session["addproduct"] = "false";
+
+---------------
+
+DataList Item Command Event Coding
+-----------------------------------
+
+         Session["addproduct"] = "true";
+        Response.Redirect("AddtoCart.aspx?id=" + e.CommandArgument.ToString());
+
+-------------------------------------
+
+DataList ItemDataBound Event Coding
+-------------------------------------
+
+Int64 originalprice;
+        Int64 discount;
+        Int64 discountprice;
+        Int64 newprice;
+        
+        Label lb2 = e.Item.FindControl("Label6") as Label;
+       
+        Label lb1 = e.Item.FindControl("Label8") as Label;
+        Label lb3 = e.Item.FindControl("Label3") as Label;
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=JewelleryShop; Integrated Security=True";
+        String myquery = "Select * from productdetails where designid=" + lb3.Text;
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+     
+
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            originalprice = Convert.ToInt64(ds.Tables[0].Rows[0]["price"].ToString());
+            discount = Convert.ToInt64(ds.Tables[0].Rows[0]["discount"].ToString());
+            discountprice = (originalprice * discount) / 100;
+            newprice = originalprice - discountprice;
+            lb2.Text = "Discount ( " + discount.ToString() + "% ) Rs." + discountprice.ToString();
+            lb1.Text = "Rs." + newprice.ToString();
+
+
+
+        }
+        con.Close();
+
+-----------------------
+Important Namespaces
+
+using System.Data;
+using System.Data.SqlClient;
+
+
+------------------------
+
+AddtoCart.aspx Page Coding
+----------------------------
+
+Important Namespaces
+----------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+----------------------
+
+Page Load Coding
+-----------------
+
+Int64 discount;
+        Int64 newprice;
+        Int64 originalprice;
+        Int64 discountprice;
+        if (Session["addproduct"].ToString() == "true")
+        {
+            Session["addproduct"] = "false";
+            DataTable dt = new DataTable();
+            DataRow dr;
+            dt.Columns.Add("sno");
+            dt.Columns.Add("designid");
+            dt.Columns.Add("productname");
+            dt.Columns.Add("productimg");
+            dt.Columns.Add("description");
+            dt.Columns.Add("price");
+            dt.Columns.Add("discount");
+            dt.Columns.Add("discountprice");
+
+
+            if (Request.QueryString["id"] != null)
+            {
+                if (Session["Buyitems"] == null)
+                {
+
+                    dr = dt.NewRow();
+                    String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=jewelleryshop;Integrated Security=True";
+                    SqlConnection scon = new SqlConnection(mycon);
+                    String myquery = "select * from productdetails where designid=" + Request.QueryString["id"];
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = myquery;
+                    cmd.Connection = scon;
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    dr["sno"] = 1;
+                    dr["designid"] = ds.Tables[0].Rows[0]["designid"].ToString();
+                    dr["productname"] = ds.Tables[0].Rows[0]["productname"].ToString();
+                    dr["productimg"] = ds.Tables[0].Rows[0]["productimage"].ToString();
+                    dr["description"] = ds.Tables[0].Rows[0]["shortdescription"].ToString();
+                    dr["price"] = ds.Tables[0].Rows[0]["price"].ToString();
+                    dr["discount"] = ds.Tables[0].Rows[0]["discount"].ToString()+"%";
+
+                    originalprice = Convert.ToInt64(ds.Tables[0].Rows[0]["price"].ToString());
+                    discount= Convert.ToInt64(ds.Tables[0].Rows[0]["discount"].ToString());
+                    discountprice = (originalprice * discount) / 100;
+                    newprice = originalprice - discountprice;
+                    dr["discountprice"] = newprice.ToString();
+                    dt.Rows.Add(dr);
+                    GridView1.DataSource = dt;
+                    GridView1.DataBind();
+                    Session["buyitems"] = dt;
+                }
+                else
+                {
+
+                    dt = (DataTable)Session["buyitems"];
+                    int sr;
+                    sr = dt.Rows.Count;
+
+                    dr = dt.NewRow();
+                    String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=jewelleryshop;Integrated Security=True";
+                    SqlConnection scon = new SqlConnection(mycon);
+                    String myquery = "select * from productdetails where designid=" + Request.QueryString["id"];
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = myquery;
+                    cmd.Connection = scon;
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    dr["sno"] = sr + 1;
+                    dr["designid"] = ds.Tables[0].Rows[0]["designid"].ToString();
+                    dr["productname"] = ds.Tables[0].Rows[0]["productname"].ToString();
+                    dr["productimg"] = ds.Tables[0].Rows[0]["productimage"].ToString();
+                    dr["description"] = ds.Tables[0].Rows[0]["shortdescription"].ToString();
+                    dr["price"] = ds.Tables[0].Rows[0]["price"].ToString();
+                    dr["discount"] = ds.Tables[0].Rows[0]["discount"].ToString() + "%";
+
+                    originalprice = Convert.ToInt64(ds.Tables[0].Rows[0]["price"].ToString());
+                    discount = Convert.ToInt64(ds.Tables[0].Rows[0]["discount"].ToString());
+                    discountprice = (originalprice * discount) / 100;
+                    newprice = originalprice - discountprice;
+                    dr["discountprice"] = newprice.ToString();
+                    dt.Rows.Add(dr);
+                    GridView1.DataSource = dt;
+                    GridView1.DataBind();
+                    Session["buyitems"] = dt;
+
+                }
+            }
+
+
+        }
+        else
+        {
+            DataTable dt;
+            dt = (DataTable)Session["buyitems"];
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
+        }
+
+------------------------

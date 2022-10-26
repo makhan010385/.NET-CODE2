@@ -1,0 +1,32 @@
+Static Variable Used
+--------------------
+
+static string filenames="";
+
+---------------------
+
+Start Upload Button Click Coding
+---------------------------------
+
+for (int i = 0; i < Request.Files.Count; i++)
+        {
+            HttpPostedFile PostedFile = Request.Files[i];
+            if (PostedFile.ContentLength > 0)
+            {
+                string FileName = System.IO.Path.GetFileName(PostedFile.FileName);
+                PostedFile.SaveAs(Server.MapPath("\\Images\\") + FileName);
+                filenames = filenames + FileName+" ,";
+
+            }
+
+        }
+        Label3.Text = "Files " + filenames + " Has Been Uploaded Successfully";
+
+------------------------------
+
+Webconfig File Configuration
+--------------------------------
+
+  <httpRuntime targetFramework="4.6" executionTimeout="250" maxRequestLength="5000000" />
+
+----------------------------------

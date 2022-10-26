@@ -1,0 +1,121 @@
+Important Namespaces Used
+-------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+------------------------
+
+Variable Declaration
+------------------------
+
+    static String lockstatus;
+    static int attemptcount = 0;
+
+------------------------
+
+
+Login Button Click Event Coding
+---------------------------------
+
+String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=UserLoginData;Integrated Security=True";
+        SqlConnection scon = new SqlConnection(mycon);
+        String myquery = "select * from logindetail where username='" + TextBox1.Text + "'";
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = scon;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        String uname;
+        String pass;
+        String status;
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            uname = ds.Tables[0].Rows[0]["username"].ToString();
+            pass = ds.Tables[0].Rows[0]["password"].ToString();
+            status = ds.Tables[0].Rows[0]["status"].ToString();
+            scon.Close();
+            if (status == "Open")
+            {
+
+
+                if (uname == TextBox1.Text && pass == TextBox2.Text)
+                {
+                    Session["username"] = uname;
+                    Response.Redirect("MainPage.aspx");
+                }
+                else
+                {
+                    Label3.Text = "Invalid Username or Password - Relogin with Correct Username Password- No. of Attemps Remaining : " + (2 - attemptcount);
+                    attemptcount = attemptcount + 1;
+                }
+            }
+            else
+            {
+                Label3.Text = "Your Account Locked Already : Contact Administrator";
+            }
+        }
+        else
+        {
+            Label3.Text = "Invalid Username or Password - Relogin with Correct Username Password ";
+            
+        }
+        if(attemptcount==3)
+        {
+            Label3.Text = "Your Account Has Been Locked Due to Three Invalid Attempts - Contact Administrator";
+            setlockstatus(TextBox1.Text);
+            attemptcount = 0;
+        }
+
+----------------------------------
+
+User Defined Methods
+-----------------------
+
+ private void setlockstatus(String username1)
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=UserLoginData; Integrated Security=True";
+        String updatedata = "Update LoginDetail set status='Locked' where username='" + username1+"'";
+        SqlConnection con = new SqlConnection(mycon);
+        con.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = updatedata;
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+    }
+
+-------------------------
+
+
+
+---
+
+MainPage Page Load Coding
+---------------------------
+
+ if (Session["username"] == null)
+        {
+
+            Response.Redirect("Default.aspx");
+
+
+        }
+        else
+        {
+            Label2.Text = "Hello " + Session["username"].ToString();
+
+        }
+
+
+---------------------------
+
+
+Logout Button Click Event Coding
+---------------------------------
+
+ Session.Abandon();
+        Response.Redirect("Signout.aspx");
+
+----------------------------------

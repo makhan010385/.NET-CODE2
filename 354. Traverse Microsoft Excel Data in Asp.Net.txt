@@ -1,0 +1,118 @@
+Important Namespaces Used
+-----------------------------
+
+using System.IO;
+using System.Data;
+using System.Data.OleDb;
+
+----------------------
+
+Class Level Variables
+----------------------
+
+    static OleDbConnection mycon;
+    static OleDbCommand cmd;
+    static OleDbDataAdapter oda;
+    static DataTable dt;
+    static DataRow dr;
+    static int totalrows;
+    static int currentrow;
+
+------------------------
+
+PageLoad Coding
+------------------------
+
+if(!IsPostBack)
+        {
+            String ExcelPath = Server.MapPath("~/ExcelFile/StudentData.xlsx");
+            mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+            mycon.Open();
+            OleDbCommand cmd = new OleDbCommand();
+            OleDbDataAdapter oda = new OleDbDataAdapter();
+            dt = new DataTable();
+            cmd.CommandText = "select * from [Sheet1$]";
+            cmd.Connection = mycon;
+            oda.SelectCommand = cmd;
+
+            oda.Fill(dt);
+            totalrows = dt.Rows.Count;
+            dr = (DataRow)dt.Rows[0];
+            currentrow = 0;
+            // Response.Write("<br/>"+dr[0].ToString());
+            TextBox1.Text = dr["rollno"].ToString();
+            TextBox2.Text = dr["name"].ToString();
+            TextBox3.Text = dr["fathername"].ToString();
+            TextBox4.Text = dr["mothername"].ToString();
+            mycon.Close();
+        }
+
+---------------------------
+
+First Button Click Event Coding
+------------------------------
+
+ currentrow = 0;
+        dr = (DataRow)dt.Rows[0];
+        TextBox1.Text = dr["rollno"].ToString();
+        TextBox2.Text = dr["name"].ToString();
+        TextBox3.Text = dr["fathername"].ToString();
+        TextBox4.Text = dr["mothername"].ToString();
+        Label3.Text = "First Record Displayed";
+
+------------------------------
+
+Next Button Click Event Coding
+-------------------------------
+
+if(currentrow==(totalrows-1))
+        {
+            Label3.Text = "Already at Last Record";
+           
+        }
+        else
+        {
+            currentrow = currentrow + 1;
+            dr = (DataRow)dt.Rows[currentrow];
+            TextBox1.Text = dr["rollno"].ToString();
+            TextBox2.Text = dr["name"].ToString();
+            TextBox3.Text = dr["fathername"].ToString();
+            TextBox4.Text = dr["mothername"].ToString();
+            Label3.Text = "Next Record Displayed";
+        }
+
+------------------------------------
+
+Previous Button Click Event Coding
+-----------------------------------
+
+if (currentrow < 1)
+        {
+            Label3.Text = "Already at First Record";
+
+        }
+        else
+        {
+            currentrow = currentrow - 1;
+            dr = (DataRow)dt.Rows[currentrow];
+            TextBox1.Text = dr["rollno"].ToString();
+            TextBox2.Text = dr["name"].ToString();
+            TextBox3.Text = dr["fathername"].ToString();
+            TextBox4.Text = dr["mothername"].ToString();
+            Label3.Text = "Previous Record Displayed";
+        }
+
+------------------------------------
+
+Last Button Click Event Coding
+-----------------------------------
+
+dr = (DataRow)dt.Rows[totalrows-1];
+        currentrow = totalrows - 1;
+        TextBox1.Text = dr["rollno"].ToString();
+        TextBox2.Text = dr["name"].ToString();
+        TextBox3.Text = dr["fathername"].ToString();
+        TextBox4.Text = dr["mothername"].ToString();
+        Label3.Text = "Last Record Displayed";
+
+-----------------------------

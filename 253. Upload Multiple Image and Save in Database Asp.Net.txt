@@ -1,0 +1,153 @@
+Important Namespaces Used
+--------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+
+--------------------------
+Webconfig File Coding
+--------------------------
+
+<httpRuntime targetFramework="4.6"
+
+               executionTimeout="200"
+               maxRequestLength="8192"
+               requestLengthDiskThreshold="256"
+               useFullyQualifiedRedirectUrl="false"
+               minFreeThreads="8"
+               minLocalRequestFreeThreads="4"
+               appRequestQueueLimit="5000"
+               enableKernelOutputCache="true"
+               enableVersionHeader="true"
+               requireRootedSaveAsPath="true"
+               enable="true"
+               shutdownTimeout="90"
+               delayNotificationTimeout="5"
+               waitChangeNotification="0"
+               maxWaitChangeNotification="0"
+               enableHeaderChecking="true"
+               sendCacheControlHeader="true"
+               apartmentThreading="false"/>
+
+--------------------------
+--------------------------
+
+static int photoid;
+
+--------------------------
+
+Userdefined method Used
+--------------------------
+
+public void getidno()
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=ProfileDatabase;Integrated Security=True";
+        SqlConnection scon = new SqlConnection(mycon);
+        String myquery = "select sno from photodetail";
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = scon;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        scon.Close();
+        if (ds.Tables[0].Rows.Count < 1)
+        {
+            Label3.Text = "1001";
+            photoid = 1001;
+
+        }
+        else
+        {
+
+
+
+            String mycon1 = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=ProfileDatabase;Integrated Security=True";
+            SqlConnection scon1 = new SqlConnection(mycon1);
+            String myquery1 = "select max(sno) from photodetail";
+            SqlCommand cmd1 = new SqlCommand();
+            cmd1.CommandText = myquery1;
+            cmd1.Connection = scon1;
+            SqlDataAdapter da1 = new SqlDataAdapter();
+            da1.SelectCommand = cmd1;
+            DataSet ds1 = new DataSet();
+            da1.Fill(ds1);
+            Label3.Text = ds1.Tables[0].Rows[0][0].ToString();
+            int a;
+            a = Convert.ToInt16(Label3.Text);
+            a = a + 1;
+            photoid = a;
+            Label3.Text = a.ToString();
+            scon1.Close();
+        }
+
+    }
+
+--------------------------------------
+
+private void savedata(int sno1,String image1,String image2,String image3)
+    {
+        String updatepass = "insert into photodetail(sno,firstimage,secondimage,thirdimage) values(" + sno1 + ",'" + image1 + "','" + image2 + "','" + image3 + "')";
+        String mycon1 = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=ProfileDatabase;Integrated Security=True";
+        SqlConnection s = new SqlConnection(mycon1);
+        s.Open();
+        SqlCommand cmd1 = new SqlCommand();
+        cmd1.CommandText = updatepass;
+        cmd1.Connection = s;
+        cmd1.ExecuteNonQuery();
+        s.Close();
+    }
+
+
+
+--------------------------------------
+
+Pageload coding
+----------------
+
+getidno();
+
+----------------
+
+
+Upload and Save Button Click Event
+--------------------------------------
+
+String fileextension;
+        String photoname;
+        String image1="";
+        String image2="";
+        String image3="";
+        HttpFileCollection hfc = Request.Files;
+        for (int i = 0; i < hfc.Count; i++)
+        {
+            HttpPostedFile hpf = hfc[i];
+            if (hpf.ContentLength > 0)
+            {
+                fileextension = Path.GetExtension(hpf.FileName);
+                photoname = photoid +""+ i + fileextension;
+                
+                hpf.SaveAs(Server.MapPath("UploadedImages") + "\\" + photoname);
+                if(i==0)
+                {
+                    image1 = "UploadedImages\\" + photoname;
+                }
+                if (i == 1)
+                {
+                    image2 = "UploadedImages\\" + photoname;
+                }
+                if (i == 2)
+                {
+                    image3 = "UploadedImages\\" + photoname;
+                }
+            }
+        }
+        savedata(photoid, image1, image2, image3);
+        Label4.Text = "Data Has Been Saved Successfully";
+        getidno();
+
+------------------------------------
+
+

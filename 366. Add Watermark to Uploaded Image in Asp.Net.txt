@@ -1,0 +1,33 @@
+Important Namespaces Used
+------------------------
+
+using System.IO;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+
+------------------------
+
+Start Upload Button Click Event Coding
+-------------------------
+
+ string path = "~/ImageFile/" + FileUpload1.PostedFile.FileName;
+        System.Drawing.Image image = System.Drawing.Image.FromStream(FileUpload1.PostedFile.InputStream);
+        int width = image.Width;
+        int height = image.Height;
+        Bitmap bmp = new Bitmap(width, height);
+        Graphics graphics = Graphics.FromImage((System.Drawing.Image)bmp);
+        graphics.InterpolationMode = InterpolationMode.High;
+        graphics.SmoothingMode = SmoothingMode.HighQuality;
+        graphics.Clear(Color.Transparent);
+        graphics.DrawImage(image, 0, 0, width, height);
+        Font font = new Font("Arial", 20, FontStyle.Bold);
+        SolidBrush brush = new SolidBrush(Color.FromArgb(0,0,0));
+        float y = (height - 30);
+        graphics.DrawString("© Hariti Study Hub", font, brush, 0.0F, y);
+        System.Drawing.Image newImage = (System.Drawing.Image)bmp;
+        newImage.Save(Server.MapPath("~/ImageFile/" + FileUpload1.PostedFile.FileName));
+        graphics.Dispose();
+        Label3.Text = "File Has Been Saved Successfully";
+
+
+----------------------

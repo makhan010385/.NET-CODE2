@@ -1,0 +1,116 @@
+Important Namespaces Used
+--------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-------------------------
+
+Class Level Variables Used
+--------------------------
+
+    static SqlConnection con;
+    static SqlCommand cmd;
+    static SqlDataAdapter da;
+    static String mycon;
+    static String myquery;
+    static DataSet ds;
+    static int totalrows;
+    static int currentrow;
+
+-------------------------
+
+Page Load Event Coding
+------------------------
+
+if(!IsPostBack)
+        {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=CollegeData; Integrated Security=True";
+        String myquery = "Select * from StudentData";
+        con = new SqlConnection(mycon);
+        cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        ds = new DataSet();
+        da.Fill(ds);
+        totalrows = ds.Tables[0].Rows.Count;
+        Label3.Text = "First Record Displayed";
+        TextBox1.Text = ds.Tables[0].Rows[0]["rollno"].ToString();
+        TextBox2.Text = ds.Tables[0].Rows[0]["sname"].ToString();
+        TextBox3.Text = ds.Tables[0].Rows[0]["fathername"].ToString();
+        TextBox4.Text = ds.Tables[0].Rows[0]["mothername"].ToString();
+        con.Close();
+        }
+
+----------------------
+
+Next Button Click Event Coding
+-----------------------------
+
+if (currentrow == (totalrows - 1))
+        {
+            Label3.Text = "Already at Last Record";
+
+        }
+        else
+        {
+            currentrow = currentrow + 1;
+            TextBox1.Text = ds.Tables[0].Rows[currentrow]["rollno"].ToString();
+            TextBox2.Text = ds.Tables[0].Rows[currentrow]["sname"].ToString();
+            TextBox3.Text = ds.Tables[0].Rows[currentrow]["fathername"].ToString();
+            TextBox4.Text = ds.Tables[0].Rows[currentrow]["mothername"].ToString();
+            Label3.Text = "Next Record Displayed";
+        }
+
+----------------------------
+
+Previous Button Click Event Coding
+------------------------------
+
+if (currentrow < 1)
+        {
+            Label3.Text = "Already at First Record";
+
+        }
+        else
+        {
+            currentrow = currentrow - 1;
+            TextBox1.Text = ds.Tables[0].Rows[currentrow]["rollno"].ToString();
+            TextBox2.Text = ds.Tables[0].Rows[currentrow]["sname"].ToString();
+            TextBox3.Text = ds.Tables[0].Rows[currentrow]["fathername"].ToString();
+            TextBox4.Text = ds.Tables[0].Rows[currentrow]["mothername"].ToString();
+            Label3.Text = "Previous Record Displayed";
+        }
+
+---------------------------
+
+First Button Click Event Coding
+-------------------------------
+
+ currentrow = 0;
+        TextBox1.Text = ds.Tables[0].Rows[currentrow]["rollno"].ToString();
+        TextBox2.Text = ds.Tables[0].Rows[currentrow]["sname"].ToString();
+        TextBox3.Text = ds.Tables[0].Rows[currentrow]["fathername"].ToString();
+        TextBox4.Text = ds.Tables[0].Rows[currentrow]["mothername"].ToString();
+        Label3.Text = "First Record Displayed";
+
+-----------------------------
+
+Last Button Click Event Coding
+--------------------------
+
+
+        currentrow = totalrows - 1;
+        TextBox1.Text = ds.Tables[0].Rows[currentrow]["rollno"].ToString();
+        TextBox2.Text = ds.Tables[0].Rows[currentrow]["sname"].ToString();
+        TextBox3.Text = ds.Tables[0].Rows[currentrow]["fathername"].ToString();
+        TextBox4.Text = ds.Tables[0].Rows[currentrow]["mothername"].ToString();
+        Label3.Text = "Last Record Displayed";
+
+-------------------------
+
+
+
+

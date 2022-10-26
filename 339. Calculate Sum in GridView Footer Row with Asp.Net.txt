@@ -1,0 +1,23 @@
+User Defined Method
+-------------------
+
+private void calculateSum()
+    {
+        Int64 grandtotal = 0;
+        foreach (GridViewRow row in GridView1.Rows)
+        {
+          
+          grandtotal=grandtotal+Convert.ToInt64(row.Cells[3].Text); //Where Cells is the column. Just changed the index of cells
+        }
+        GridView1.FooterRow.Cells[2].Text = "Grand Total";
+        GridView1.FooterRow.Cells[3].Text = grandtotal.ToString();
+    }
+
+-------------------
+
+GridView DataBound Event Coding
+--------------------------------
+
+calculateSum();
+
+--------------------------------

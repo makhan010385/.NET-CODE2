@@ -1,0 +1,29 @@
+Important Namespaces Used
+--------------------------
+
+using System.Data;
+using System.Data.OracleClient;
+using System.IO;
+
+--------------------------
+
+Show Image Button Click Event
+----------------------------
+
+        byte[] bytes;
+        string fileName;
+        String mycon = "Data Source=XE;User ID=system;Password=123456;Unicode=True";
+        String myquery = "Select * from filedetails where imageid="+TextBox1.Text;
+        OracleConnection con = new OracleConnection(mycon);
+        con.Open();
+        OracleCommand cmd = new OracleCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        OracleDataReader sdr = cmd.ExecuteReader();
+        sdr.Read();
+        bytes = (byte[])sdr["imagefile"];
+        fileName = sdr["imageid"].ToString();
+        Image1.ImageUrl = "data:image/jpg;base64," + Convert.ToBase64String(bytes);
+        con.Close();
+
+------------------------------------

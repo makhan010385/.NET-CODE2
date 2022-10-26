@@ -1,0 +1,41 @@
+Important Namespaces Used in This Example
+------------------------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-----------------------------------------
+
+Update at Once Button Click Event Coding
+-----------------------------------------
+
+ foreach (GridViewRow row in GridView1.Rows)
+        {
+            DropDownList classincharge = (row.Cells[3].FindControl("DropDownList1") as DropDownList);
+            int teacherid = Convert.ToInt32(row.Cells[0].Text);
+            
+                updaterow(teacherid, classincharge.SelectedItem.Text);
+
+
+
+        }
+
+-----------------------------------------
+
+User Defined Method
+----------------------------
+
+ private void updaterow(int teacherid1, String classassigned1)
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=TeacherDatabase; Integrated Security=True";
+        String updatedata = "Update classdetails set classassigned='" + classassigned1 + "' where teacherid=" + teacherid1;
+        SqlConnection con = new SqlConnection(mycon);
+        con.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = updatedata;
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+        Label3.Text = "Data Has Been Updated Successfully";
+    }
+
+-----------------------------

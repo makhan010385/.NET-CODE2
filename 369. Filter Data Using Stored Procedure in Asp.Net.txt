@@ -1,0 +1,37 @@
+Coding to Create Stored Procedure
+------------------------------------
+
+create procedure FilterStudentData
+(
+  @strclass as char(10)
+)
+as
+begin
+Select * from StudentDetails where class=@strclass
+end
+
+------------------------------------
+
+Important Namespaces Used
+---------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+--------------------------
+
+Filter Data Button Click Event Coding
+------------------------------------
+
+        String constring = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=ClassDatabase; Integrated Security=true";
+        SqlConnection sqlcon = new SqlConnection(constring);
+        String pname = "FilterStudentData"; ;
+        sqlcon.Open();
+        SqlCommand com = new SqlCommand(pname, sqlcon);
+        com.CommandType = CommandType.StoredProcedure;
+        com.Parameters.AddWithValue("@strclass", DropDownList1.SelectedItem.Text);
+        GridView1.DataSource = com.ExecuteReader(); 
+        GridView1.DataBind();
+        Label3.Text = "Data Has Been Filtered and Displayed Succcessfully";
+
+------------------------------------

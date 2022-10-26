@@ -1,0 +1,31 @@
+Important Attributes in GridView Source
+---------------------------------------
+
+ClientIDMode="Static" 
+
+
+RowStyle-CssClass="rowHover"
+
+
+---------------------------------------
+
+CSS Coding
+---------------------------------------
+
+<style type="text/css">
+
+        #GridView1 tr.rowHover:hover
+
+        {
+
+                background-color: Yellow;
+
+                font-family: 'Times New Roman', Times, serif;
+                font-weight:bold;
+
+        }
+
+</style>
+
+
+--------------------------------------

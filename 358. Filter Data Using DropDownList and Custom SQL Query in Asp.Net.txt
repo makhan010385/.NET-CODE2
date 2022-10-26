@@ -1,0 +1,53 @@
+Important Namespaces Used
+-------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-------------------------
+
+Page Load Event Coding
+------------------------
+if(!IsPostBack)
+        {
+            String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=CollegeData; Integrated Security=True";
+            String myquery = "Select * from studentdata";
+            SqlConnection con = new SqlConnection(mycon);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = myquery;
+            cmd.Connection = con;
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            GridView1.DataSource = ds;
+            GridView1.DataBind();
+            int totalrows = ds.Tables[0].Rows.Count;
+            int c = 0;
+            while(c<totalrows)
+            {
+                DropDownList1.Items.Add(ds.Tables[0].Rows[c]["rollno"].ToString());
+                c++;
+            }
+            con.Close();
+        }
+
+----------------------
+
+Filter Data Button Click Event Coding
+-------------------------------------
+
+String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=CollegeData; Integrated Security=True";
+        String myquery = "Select * from studentdata where rollno="+DropDownList1.SelectedItem.Text;
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        GridView1.DataSource = ds;
+        GridView1.DataBind();
+
+---------------------------------

@@ -1,0 +1,29 @@
+Important Namespaces
+-----------------------
+
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+
+------------------------
+
+Upload and Save Button Click Event
+---------------------------------
+
+        string filename = Path.GetFileName(FileUpload1.PostedFile.FileName);
+        Stream fs = FileUpload1.PostedFile.InputStream;
+        BinaryReader br = new BinaryReader(fs);
+        byte[] imagecode = br.ReadBytes((Int32)fs.Length);
+        string query = "Insert Into Profiledetails VALUES ('" + TextBox1.Text + "',@pic)";
+        SqlCommand cmd = new SqlCommand(query);
+        cmd.Parameters.AddWithValue("@pic", imagecode);
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=StoreBinaryImage; Integrated Security=true";
+        SqlConnection con = new SqlConnection(mycon);
+        con.Open();
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+        Label3.Text = "Image Has Been Saved Successfully with Image ID " + TextBox1.Text;
+        con.Close();
+        TextBox1.Text = "";
+
+---------------------------------------

@@ -1,0 +1,63 @@
+Important Namespaces Used
+--------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+
+--------------------------
+
+Static Variable Declared
+-------------------------
+
+ static Boolean validdate;
+
+-------------------------
+
+Custom Validator 1 Coding
+--------------------------
+
+ DateTime d;
+        args.IsValid = DateTime.TryParseExact(args.Value, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d);
+ validdate = DateTime.TryParseExact(args.Value, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d);
+
+---------------------------
+
+Custom Validator 2 Coding
+---------------------------
+
+ DateTime d;
+        args.IsValid = DateTime.TryParseExact(args.Value, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d);
+ validdate = DateTime.TryParseExact(args.Value, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d);
+---------------------------
+
+Search Button Click Coding
+---------------------------
+
+ if(validdate==true)
+        {
+
+ String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=BankingRecord; Integrated Security=True";
+        String myquery = "select transactionid,convert(varchar, cast(convert(varchar(10), transactiondate, 101) as datetime) , 106) as transactiondate, transdetail, transamount  from transactiondetail where transactiondate between CONVERT(datetime, '"+TextBox1.Text+"', 105) AND CONVERT(datetime, '"+TextBox2.Text+"', 105)";
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        GridView1.DataSource = ds;
+        GridView1.DataBind();
+        con.Close();
+}
+--------------------------
+
+Web.config Coding
+--------------------------
+
+<appSettings>
+    <add key="ValidationSettings:UnobtrusiveValidationMode" value="None" />
+  </appSettings>
+
+--------------------------

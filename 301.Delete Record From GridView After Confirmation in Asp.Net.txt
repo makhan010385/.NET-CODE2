@@ -1,0 +1,36 @@
+LinkButton Coding
+--------------------
+
+<asp:LinkButton ID="LinkButton1" runat="server" Font-Bold="True" Font-Size="Large" CommandName="Delete">Delete</asp:LinkButton>
+
+--------------------
+
+Panel Coding
+---------------
+<asp:Panel ID="Panel1" runat="server" CssClass="auto-style1">
+<div class="auto-style2">
+Do You Want to Delete Record<br />
+<br />
+<asp:Button ID="Button1" runat="server" BackColor="#FF9966" Height="29px" Text="Yes" Width="53px" />
+&nbsp;<asp:Button ID="Button2" runat="server" BackColor="#FF9966" Height="29px" Text="No" Width="53px" />
+</div>
+</asp:Panel>
+
+----------------
+
+ConfirmationButtonExtender
+--------------------------
+
+<ajaxToolkit:ConfirmButtonExtender ID="ConfirmButtonExtender1" runat="server" TargetControlID="LinkButton1" DisplayModalPopupID="Popup1"/>
+   
+
+---------------------------
+
+ModalPopupExtender Coding
+---------------------------
+
+<ajaxToolkit:ModalPopupExtender ID="Popup1" runat="server" TargetControlID="LinkButton1" PopupControlID="Panel1" OkControlID="Button1" CancelControlID="Button2">
+
+</ajaxToolkit:ModalPopupExtender>
+
+----------------------------

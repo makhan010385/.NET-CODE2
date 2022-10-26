@@ -1,0 +1,15 @@
+      GridView1.DataSourceID = null;
+        if (DropDownList1.SelectedItem.Text=="Low to High Price")
+        {
+            
+            GridView1.DataSource= SqlDataSource1;
+            GridView1.DataBind();
+
+        }
+        else
+        {
+            
+            GridView1.DataSource= SqlDataSource2;
+            GridView1.DataBind();
+
+        }

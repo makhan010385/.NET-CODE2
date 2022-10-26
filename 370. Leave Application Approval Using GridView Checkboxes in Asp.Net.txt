@@ -1,0 +1,69 @@
+Important SQL Query in SQLDataSource 
+-----------------------------------
+
+SELECT applicationid, applicantname, applicationdetail FROM ApplicationDetails WHERE (approval = 'N')
+
+-----------------------------------
+
+Important Namespaces Used
+--------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-----------------------
+
+PageLoad Coding 
+----------------
+
+if(!IsPostBack)
+        {
+            GridView1.DataSource = SqlDataSource1;
+            GridView1.DataBind();
+        }
+
+------------------
+
+Submit Button Click Event Coding
+--------------------------------
+
+foreach (GridViewRow row in GridView1.Rows)
+        {
+            CheckBox status = (row.Cells[3].FindControl("CheckBox1") as CheckBox);
+            int applicationid = Convert.ToInt32(row.Cells[1].Text);
+            if (status.Checked)
+            {
+                updaterow(applicationid,"A");
+            }
+            else
+            {
+                updaterow(applicationid, "N");
+
+            }
+
+
+
+        }
+        Label3.Text = "Applications Has Been Approved Successfully";
+        SqlDataSource1.DataBind();
+        GridView1.DataSource = SqlDataSource1;
+        GridView1.DataBind();
+
+------------------------------------
+
+User Defined Method Coding
+-----------------------------
+
+ private void updaterow(int applicationid,String approval)
+    {
+        String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=LeaveApplication; Integrated Security=True";
+        String updatedata = "Update applicationdetails set approval='" + approval + "' where applicationid=" +  applicationid;
+        SqlConnection con = new SqlConnection(mycon);
+        con.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = updatedata;
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+    }
+
+---------------------------

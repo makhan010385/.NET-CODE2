@@ -1,0 +1,57 @@
+Important Namespaces Used
+-------------------------
+
+using System.Net.Mail;
+using System.Net;
+
+---------------------
+
+Send Mail Button Click Event Coding
+--------------------------------------
+
+foreach (GridViewRow row in GridView1.Rows)
+        {
+            CheckBox status = (row.Cells[2].FindControl("CheckBox1") as CheckBox);
+            String emailadd = row.Cells[1].Text;
+            if (status.Checked)
+            {
+                sendcustomermail(emailadd);
+            }
+         
+        }
+
+
+-------------------------------------
+
+
+User Defined Method
+---------------------
+
+private void sendcustomermail(String emailadd1)
+    {
+        SmtpClient smtp = new SmtpClient();
+        smtp.Host = "smtp.gmail.com";
+        smtp.Port = 587;
+        smtp.Credentials = new System.Net.NetworkCredential("salmansharma2014@gmail.com", "YourPassword");
+        smtp.EnableSsl = true;
+        MailMessage msg = new MailMessage();
+        msg.Subject = TextBox1.Text;
+        msg.Body = TextBox2.Text+"\n\n\nThanks & Regards.\nHariti Study Hub Team";
+        string toaddress = emailadd1;
+        msg.To.Add(toaddress);
+        string fromaddress = "Hariti Study Hub <salmansharma2014@gmail.com>";
+        msg.From = new MailAddress(fromaddress);
+        try
+        {
+            smtp.Send(msg);
+
+
+        }
+        catch
+        {
+            throw;
+        }
+        Response.Write("email sent to " + emailadd1);
+    }
+
+-------------------------

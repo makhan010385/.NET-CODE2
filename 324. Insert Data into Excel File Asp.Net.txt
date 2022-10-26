@@ -1,0 +1,68 @@
+Important Namespaces Used
+---------------------------
+
+using System.IO;
+using System.Data.OleDb;
+
+--------------------------
+
+Page Load Coding
+------------------
+
+ if(!IsPostBack)
+        {
+            getsrno();
+        }
+
+------------------
+
+User Defined Method
+--------------------
+
+ private void getsrno()
+    {
+        int sno;
+        String ExcelPath = Server.MapPath("~/ExcelFile/PhoneDiary.xlsx");
+        OleDbConnection mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+        mycon.Open();
+        OleDbCommand cmd = new OleDbCommand("select max(sno) from [Sheet1$]", mycon);
+        OleDbDataReader dr = cmd.ExecuteReader();
+        dr.Read();
+            if (dr[0].ToString() != "")
+            {
+                // Response.Write("<br/>"+dr[0].ToString());
+                sno = Convert.ToInt32(dr[0].ToString());
+                sno = sno + 1;
+                Label3.Text = sno.ToString() ;
+            }
+            else
+            {
+            sno = 1;
+            Label3.Text = sno.ToString();
+        }
+       
+        mycon.Close();
+
+    }
+
+-------------------
+
+
+Save Button Click Event Coding
+----------------------------
+
+  String ExcelPath = Server.MapPath("~/ExcelFile/PhoneDiary.xlsx");
+        
+        OleDbConnection mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+        mycon.Open();
+      
+        string query= "INSERT INTO [Sheet1$] VALUES(" + Convert.ToInt16( Label3.Text)+ ",'" + TextBox1.Text + "','" + TextBox2.Text + "')"; 
+        OleDbCommand cmd = new OleDbCommand(query, mycon);
+        cmd.ExecuteNonQuery();
+        mycon.Close();
+        Label4.Text = "Data Has Been Saved in Excel File Successfully";
+        getsrno();
+        TextBox1.Text = "";
+        TextBox2.Text = "";
+
+------------------------------

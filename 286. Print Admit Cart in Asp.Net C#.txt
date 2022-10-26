@@ -1,0 +1,68 @@
+Submit Button Click Event Coding
+---------------------------------
+
+String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=JobApplication; Integrated Security=True";
+        String myquery = "Select * from CandidateDetail where rollno=" + TextBox1.Text;
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            Panel1.Visible = true;
+            // Label3.Text = "Data Found";
+            Label4.Text = TextBox1.Text; 
+            Label5.Text = ds.Tables[0].Rows[0]["cname"].ToString();
+            Label6.Text = ds.Tables[0].Rows[0]["appliedjob"].ToString();
+            Label7.Text = ds.Tables[0].Rows[0]["venuefortest"].ToString();
+            Label8.Text = ds.Tables[0].Rows[0]["datetimetest"].ToString();
+            
+            Image1.ImageUrl = ds.Tables[0].Rows[0]["applicantimage"].ToString();
+        }
+        else
+        {
+            Label9.Text = "Roll Number Not Found";
+
+        }
+        con.Close();
+
+--------------------------
+
+
+Print Button Implementation
+---------------------------
+
+<input name="b_print" type="button" class="ipt"   onclick="printdiv('div_print');" value=" Print ">
+
+---------------------------
+
+JavaScript Coding For Print Coding
+-------------------------------
+
+<script language="javascript">
+function printdiv(printpage)
+{
+var headstr = "<html><head><title></title></head><body>";
+var footstr = "</body>";
+var newstr = document.all.item(printpage).innerHTML;
+var oldstr = document.body.innerHTML;
+document.body.innerHTML = headstr+newstr+footstr;
+window.print();
+document.body.innerHTML = oldstr;
+return false;
+}
+</script>
+
+-------------------------\
+
+
+
+DIV Tag for Printing
+-----------------------
+
+<div id="div_print">
+------------------------

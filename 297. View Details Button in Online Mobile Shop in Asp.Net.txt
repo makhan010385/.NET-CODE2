@@ -1,0 +1,55 @@
+Important Properties of Add to Cart Button
+-------------------------------------------
+
+CommandArgument='<%# Eval("productid")%>' 
+
+CommandName="addtocart"
+
+-------------------------------------------
+
+Important Properties of View Detail Button
+-------------------------------------------
+
+CommandArgument='<%# Eval("productid")%>' 
+
+CommandName="viewdetails"
+
+-------------------------------------------
+
+DataList itemcommand Coding
+----------------------------
+
+ if(e.CommandName=="addtocart")
+        {
+            Response.Redirect("AddtoCart.aspx?id=" + e.CommandArgument.ToString());
+        }
+        if (e.CommandName == "viewdetails")
+        {
+            Response.Redirect("ViewDetails.aspx?id=" + e.CommandArgument.ToString());
+        }
+
+
+------------------------------
+
+
+
+ViewDetails.aspx Page Coding
+
+================================
+
+
+Buy Now Properties Important Configuration
+-----------
+
+CommandArgument='<%# Eval("productid")%>' 
+
+CommandName="addtocart"
+------------
+
+DataList ItemCommand Coding
+------------------------
+
+Response.Redirect("AddtoCart.aspx?id=" + e.CommandArgument.ToString());
+
+-----------------------
+

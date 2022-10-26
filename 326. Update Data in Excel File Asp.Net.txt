@@ -1,0 +1,55 @@
+Important Namespaces Used
+-------------------------
+
+using System.IO;
+using System.Data.OleDb;
+
+-------------------------
+
+Search Button Click Event Coding
+-------------------------------
+
+ String ExcelPath = Server.MapPath("~/ExcelFile/StudentRecord.xlsx");
+        OleDbConnection mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+        mycon.Open();
+        OleDbCommand cmd = new OleDbCommand("select * from [Sheet1$] where rollno=" + TextBox1.Text, mycon);
+        OleDbDataReader dr = cmd.ExecuteReader();
+        dr.Read();
+
+        if (dr.HasRows)
+        {
+            // Response.Write("<br/>"+dr[0].ToString());
+            TextBox2.Text = dr[1].ToString();
+            TextBox3.Text = dr[2].ToString();
+            TextBox4.Text = dr[3].ToString();
+            Label3.Text = "";
+
+        }
+        else
+        {
+            Label3.Text = "No Particular Roll Number Found";
+            TextBox2.Text = "";
+            TextBox3.Text = "";
+            TextBox4.Text = "";
+        }
+
+        mycon.Close();
+
+----------------------------
+
+
+Update Button Click Event Coding
+-------------------------------
+
+ String ExcelPath = Server.MapPath("~/ExcelFile/StudentRecord.xlsx");
+
+        OleDbConnection mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+        mycon.Open();
+
+        string query = "Update [Sheet1$] set [sname]='" + TextBox2.Text + "', [class]='" + TextBox3.Text + "', [section]='" + TextBox4.Text + "' where rollno=" + TextBox1.Text;
+        OleDbCommand cmd = new OleDbCommand(query, mycon);
+        cmd.ExecuteNonQuery();
+        mycon.Close();
+        Label4.Text = "Data Has Been Updated Successfully";
+
+------------------------------

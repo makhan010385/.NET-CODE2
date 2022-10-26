@@ -1,0 +1,32 @@
+CDN Used For Jquery
+----------------------
+
+   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"/>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+-----------------------
+
+
+Jquery Coding as Scripting Part
+--------------------------------
+
+<script type="text/javascript" language="javascript">
+        $(function () {
+            $("#<%=TextBox1.ClientID %>").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd-mm-yy",
+                yearRange: '1950:2018'
+            });
+        });
+    </script>
+
+--------------------------------
+
+Submit Button Click Event Coding
+---------------------------------
+
+Label3.Text="Your Birth Date is "+ DateTime.ParseExact(TextBox1.Text, "dd-MM-yyyy", null).ToString("dd/MMM/yyyy");
+
+----------------------------------

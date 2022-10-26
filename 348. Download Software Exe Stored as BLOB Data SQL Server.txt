@@ -1,0 +1,51 @@
+Important Namespaces Used
+---------------------------
+
+
+using System.Data;
+using System.Data.SqlClient;
+
+--------------------------
+
+
+Page Load Coding
+------------------
+
+GridView1.DataSource = SqlDataSource1;
+        GridView1.DataBind();
+
+-------------------
+
+GridView Row Command Event Coding
+----------------------------------
+
+if (e.CommandName == "download")
+        {
+            int rowIndex = Convert.ToInt32(e.CommandArgument);
+            GridViewRow row = GridView1.Rows[rowIndex];
+            byte[] bytes;
+            string fileName;
+            String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=SoftwareGallery; Integrated Security=true";
+            SqlConnection con = new SqlConnection(mycon);
+            con.Open();
+            string query = "select * from softwaredetails where softwareid='" + row.Cells[0].Text + "'";
+            SqlCommand cmd = new SqlCommand(query);
+            cmd.Connection = con;
+            SqlDataReader sdr = cmd.ExecuteReader();
+            sdr.Read();
+            bytes = (byte[])sdr["softwarefile"];
+            fileName = sdr["softwarename"].ToString();
+            con.Close();
+            Response.Clear();
+            Response.Buffer = true;
+            Response.Charset = "";
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName + ".exe");
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+            Response.End();
+
+        }
+
+-----------------------------------
+

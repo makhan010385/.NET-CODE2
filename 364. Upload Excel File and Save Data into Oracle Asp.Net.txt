@@ -1,0 +1,99 @@
+Important Command for Oracle SQL Command Prompt
+--===========================================
+
+set lines 256
+set trimout on
+set tab off
+
+1. connect system;
+
+2. select instance_name from v$instance;
+
+3. create table collegedata(rollno int,sname char(50),fathername char(50),mothername char(50));
+
+
+----------------------------------------------
+
+Important Namespaces Used
+----------------------------
+
+using System.Data.OracleClient;
+using System.IO;
+using System.Data.OleDb;
+using System.Data;
+
+----------------------------
+
+Class Level Variable Used
+--------------------------
+
+static String ExcelPath;
+
+--------------------------
+
+Start Upload Button Click Coding
+---------------------------------
+string path = Path.GetFileName(FileUpload1.FileName);
+        path = path.Replace(" ", "");
+        FileUpload1.SaveAs(Server.MapPath("~/ExcelFile/") + path);
+        ExcelPath  = Server.MapPath("~/ExcelFile/") + path;
+        OleDbConnection mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+        mycon.Open();
+        OleDbCommand cmd = new OleDbCommand("select * from [Sheet1$]", mycon);
+        OleDbDataAdapter da = new OleDbDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        GridView1.DataSource = ds.Tables[0];
+        GridView1.DataBind();
+        mycon.Close();
+        Label3.Text = "Excel File Has Been Upload and Data Captured";
+        GridView1.Visible = true;
+        Button3.Visible = true ;
+
+---------------------------
+
+User Defined Method
+-------------------
+
+ private void savedata(int rollno1, String sname1, String fname1, String mname1)
+    {
+        String query = "insert into collegedata(rollno,sname,fathername,mothername) values(" + rollno1 + ",'" + sname1 + "','" + fname1 + "','" + mname1 + "')";
+        String mycon = "Data Source=XE;User ID=system;Password=hariti123;Unicode=True";
+        OracleConnection con = new OracleConnection(mycon);
+        con.Open();
+        OracleCommand cmd = new OracleCommand();
+        cmd.CommandText = query;
+        cmd.Connection = con;
+        cmd.ExecuteNonQuery();
+        con.Close();
+    }
+
+----------------------
+
+Save Data into Oracle Button Click Event Coding
+------------------------------------------------
+
+ int rollno;
+        String sname;
+        String fname;
+        String mname;
+        OleDbConnection mycon = new OleDbConnection("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + ExcelPath + "; Extended Properties=Excel 8.0; Persist Security Info = False");
+        mycon.Open();
+        OleDbCommand cmd = new OleDbCommand("select * from [Sheet1$]", mycon);
+        OleDbDataReader dr = cmd.ExecuteReader();
+        while (dr.Read())
+        {
+            rollno = Convert.ToInt32(dr[0].ToString());
+            sname = dr[1].ToString();
+            fname = dr[2].ToString();
+            mname = dr[3].ToString();
+            savedata(rollno, sname, fname, mname);
+        }
+        Label4.Text = "Data Has Been Saved Succcessfully in Oracle";
+        mycon.Close();
+
+-------------------------------------
+
+
+

@@ -1,0 +1,39 @@
+Page Load Coding
+--------------------
+
+ if(Request.QueryString["cat"]!= null)
+            
+        {
+            DataList1.DataSourceID = null;
+            DataList1.DataSource = SqlDataSource2;
+            DataList1.DataBind();
+        }
+
+--------------------
+
+Show All Products Coding
+-------------------------
+
+ DataList1.DataSourceID = null;
+        DataList1.DataSource = SqlDataSource1;
+        DataList1.DataBind();
+
+
+------------------------
+
+
+Category Link Coding
+
+------------------------
+
+
+ Response.Redirect("Default.aspx?cat=Laptop");
+
+Response.Redirect("Default.aspx?cat=Toys");
+
+Response.Redirect("Default.aspx?cat=AntiVirus");
+
+Response.Redirect("Default.aspx?cat=Shoes");
+
+Response.Redirect("Default.aspx?cat=Speaker");
+

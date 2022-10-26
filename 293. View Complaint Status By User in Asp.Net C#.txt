@@ -1,0 +1,50 @@
+Important namespaces Used
+-----------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+---------------------------
+
+Check Status Button Click Event Coding
+---------------------------------------
+
+if(TextBox1.Text!="")
+        {
+            String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=ComplaintSystem; Integrated Security=True";
+            String myquery = "Select * from complaintdetail where complaintid=" + TextBox1.Text;
+            SqlConnection con = new SqlConnection(mycon);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = myquery;
+            cmd.Connection = con;
+            SqlDataAdapter da = new SqlDataAdapter();
+            da.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                Label3.Text = "Particular Complaint ID Found";
+                Label4.Text="Your Registered Complaint ID is " + ds.Tables[0].Rows[0]["complaintid"].ToString();
+                Label5.Text= "Status of Your Registered Complaint: " + ds.Tables[0].Rows[0]["status"].ToString();
+                if(ds.Tables[0].Rows[0]["status"].ToString()=="Under Processing")
+                {
+                    Panel1.Visible = false;
+                }
+                else
+                {
+                    Panel1.Visible = true;
+                    Label6.Text= "Admin Reply : " + ds.Tables[0].Rows[0]["replymsg"].ToString();
+                }
+            }
+            else
+            {
+                Label3.Text = "Particular Complaint ID Not Found";
+                Label4.Text = "";
+                Label5.Text = "";
+                Panel1.Visible = false;
+
+
+            }
+            con.Close();
+
+-----------------------------

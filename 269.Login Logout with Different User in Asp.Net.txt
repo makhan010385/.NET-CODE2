@@ -1,0 +1,74 @@
+Important Namespaces Used
+---------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-----------------------------
+
+Login Button Click Event Coding
+------------------------------
+
+ String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=UserLoginData;Integrated Security=True";
+        SqlConnection scon = new SqlConnection(mycon);
+        String myquery = "select * from logindetail where username='" + TextBox1.Text + "'";
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = scon;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        String uname;
+        String pass;
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            uname = ds.Tables[0].Rows[0]["username"].ToString();
+            pass = ds.Tables[0].Rows[0]["password"].ToString();
+
+            scon.Close();
+            if (uname == TextBox1.Text && pass == TextBox2.Text)
+            {
+                Session["username"] = uname;
+
+                Response.Redirect("MainPage.aspx");
+            }
+            else
+            {
+                Label3.Text = "Invalid Username or Password - Relogin with Correct Username Password";
+            }
+        }
+        else
+        {
+            Label3.Text = "Invalid Username or Password - Relogin with Correct Username Password";
+        }
+
+-------------------------
+
+
+Second Page ( Page Load Event Coding )
+
+----------------------------------------
+
+if (Session["username"] == null)
+        {
+
+            Response.Redirect("Login.aspx");
+
+
+        }
+        else
+        {
+            Label2.Text = "Hello " + Session["username"].ToString();
+
+        }
+
+-----------------------------------
+
+Signout Button Click Event Coding
+-----------------------------------
+
+ Session.Abandon();
+        Response.Redirect("Signout.aspx");
+
+--------------------------------

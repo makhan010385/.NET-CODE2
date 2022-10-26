@@ -1,0 +1,165 @@
+Important Coding for Buy Now Button
+-------------------------------------
+
+CommandArgument <%# Eval("designid")%>
+
+CommandName  addtocart
+
+--------------------------------------
+
+Show Cart Button Implementation Coding
+--------------------------------
+
+<button type="button" class="btn btn-primary" onclick="msg()">Show Cart &nbsp; <span class="badge"><asp:Label ID="Label3" runat="server" Text="0"></asp:Label></span></button>
+
+---------------------------------
+
+BootStrap, Java Script, Jquery Coding
+--------------------------------------
+
+<meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+function msg() {
+    window.location = "/ShowCart.aspx";
+}
+</script>
+
+--------------------------
+
+Important Namespaces
+---------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-----------------
+
+PageLoad Coding
+----------------
+
+ Session["addproduct"] = "false";
+        if (Session["Buyitems"] != null)
+        {
+            DataTable dt = new DataTable();
+            dt = (DataTable)Session["buyitems"];
+            int sr;
+            sr = dt.Rows.Count;
+            Label3.Text = sr.ToString() ;
+        }
+
+--------------
+
+DataList ItemCommand Coding
+-----------------------
+
+Session["addproduct"] = "true";
+        // Response.Redirect("AddtoCart.aspx?id=" + e.CommandArgument.ToString());
+        if (Session["addproduct"].ToString() == "true")
+        {
+            Session["addproduct"] = "false";
+            DataTable dt = new DataTable();
+            DataRow dr;
+            dt.Columns.Add("sno");
+            dt.Columns.Add("designid");
+            dt.Columns.Add("productname");
+            dt.Columns.Add("productimg");
+            dt.Columns.Add("description");
+            dt.Columns.Add("price");
+
+
+            if (e.CommandArgument.ToString() != null)
+            {
+                if (Session["Buyitems"] == null)
+                {
+
+                    dr = dt.NewRow();
+                    String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=jewelleryshop;Integrated Security=True";
+                    SqlConnection scon = new SqlConnection(mycon);
+                    String myquery = "select * from productdetails where designid=" + e.CommandArgument.ToString();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = myquery;
+                    cmd.Connection = scon;
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    dr["sno"] = 1;
+                    dr["designid"] = ds.Tables[0].Rows[0]["designid"].ToString();
+                    dr["productname"] = ds.Tables[0].Rows[0]["productname"].ToString();
+                    dr["productimg"] = ds.Tables[0].Rows[0]["productimage"].ToString();
+                    dr["description"] = ds.Tables[0].Rows[0]["shortdescription"].ToString();
+                    dr["price"] = ds.Tables[0].Rows[0]["price"].ToString();
+                    dt.Rows.Add(dr);
+                    Label3.Text = "1";
+                    Session["buyitems"] = dt;
+                    ImageButton img = (ImageButton)(e.Item.FindControl("ImageButton1"));
+                    img.ImageUrl = "images/addedtocart.png";
+                }
+                else
+                {
+
+                    dt = (DataTable)Session["buyitems"];
+                    int sr;
+                    sr = dt.Rows.Count;
+
+                    dr = dt.NewRow();
+                    String mycon = "Data Source=HP-PC\\SQLEXPRESS;Initial Catalog=jewelleryshop;Integrated Security=True";
+                    SqlConnection scon = new SqlConnection(mycon);
+                    String myquery = "select * from productdetails where designid=" + e.CommandArgument.ToString();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandText = myquery;
+                    cmd.Connection = scon;
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.SelectCommand = cmd;
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    dr["sno"] = sr + 1;
+                    dr["designid"] = ds.Tables[0].Rows[0]["designid"].ToString();
+                    dr["productname"] = ds.Tables[0].Rows[0]["productname"].ToString();
+                    dr["productimg"] = ds.Tables[0].Rows[0]["productimage"].ToString();
+                    dr["description"] = ds.Tables[0].Rows[0]["shortdescription"].ToString();
+                    dr["price"] = ds.Tables[0].Rows[0]["price"].ToString();
+                    dt.Rows.Add(dr);
+                    Label3.Text = (sr + 1).ToString();
+                    Session["buyitems"] = dt;
+                    ImageButton img = (ImageButton)(e.Item.FindControl("ImageButton1"));
+                    img.ImageUrl = "images/addedtocart.png";
+
+                }
+            }
+
+
+        }
+        else
+        {
+            DataTable dt;
+            dt = (DataTable)Session["buyitems"];
+            
+        }
+
+-----------------------
+
+ShowCart.aspx Coding
+--------------------
+
+Important Namespaces
+-------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+--------------------
+
+PageLoad Coding
+---------------
+
+DataTable dt;
+        dt = (DataTable)Session["buyitems"];
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+
+---------------

@@ -1,0 +1,38 @@
+Method Used in Web Service
+---------------------------
+
+[WebMethod, Description("Get image content")]
+    public byte[] GetImageFile(string fileName)
+    {
+        if (System.IO.File.Exists(Server.MapPath("~/Images/") + fileName))
+            return System.IO.File.ReadAllBytes(Server.MapPath("~/Images/") + fileName);
+        else
+            return new byte[] { 0 };
+    }
+
+----------------------------
+
+Generic Handler Used
+----------------------------
+
+MyWebService ws = new MyWebService();
+byte[] binImage = ws.GetImageFile(context.Request["fileName"]);
+if (binImage.Length == 1)
+{
+
+}
+else
+{
+context.Response.ContentType = "image/jpeg";
+context.Response.BinaryWrite(binImage);
+}
+
+--------------------------------
+
+Show Image Button Click Event Coding
+------------------------------------
+
+Image1.ImageUrl = "~/MyHandlerImage.ashx?fileName=" + TextBox1.Text;
+        Label3.Text = "Search For Image Has Been Done";
+
+---------------------------------

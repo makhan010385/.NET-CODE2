@@ -1,0 +1,67 @@
+Method Coding Used in WebService
+-------------------------------
+
+[WebMethod, Description("Get image content")]
+    public byte[] GetImageFile(string fileName)
+    {
+        if (System.IO.File.Exists(Server.MapPath("~/Images/") + fileName))
+            return System.IO.File.ReadAllBytes(Server.MapPath("~/Images/") + fileName);
+        else
+            return new byte[] { 0 };
+    }
+
+--------------------------------
+
+Coding for ProcessRequest in Generic Handler
+----------------------------------------------
+
+ MyWebService ws = new MyWebService();
+  byte[] binImage = ws.GetImageFile(context.Request["fileName"]);
+ if (binImage.Length == 1)
+ {
+
+ }
+else
+{
+  context.Response.ContentType = "image/jpeg";
+   context.Response.BinaryWrite(binImage);
+}
+
+-------------------------------------------------
+
+Important namespaces used
+-------------------------
+
+using System.Data;
+using System.Data.SqlClient;
+
+-------------------------
+
+PageLoad Coding in Default.aspx Page
+---------------------------
+
+
+String mycon = "Data Source=HP-PC\\SQLEXPRESS; Initial Catalog=BollywoodGallery; Integrated Security=True";
+        String myquery = "Select * from ActorDetail";
+        SqlConnection con = new SqlConnection(mycon);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        DataList1.DataSource = ds;
+        DataList1.DataBind();
+        con.Close();
+
+--------------------------
+
+Set ImageURL Property in DataList TemplateField Image Control
+-------------------------
+
+ImageUrl='<%# string.Format("~/MyImageHandler.ashx?fileName={0}",Eval("actorimage"))%>' 
+
+------------------------
+
+
